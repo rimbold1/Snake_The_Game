@@ -86,11 +86,18 @@ const Snake = function () {
 };
 
 Snake.prototype.draw = function () {
-    for (let i = 0; i < this.segments.length; i++) {
-        const element = this.segments[i];
-        element.drawSquare('blue');
+    let snakeHead = this.segments[0];
+    snakeHead.drawSquare("limegreen");
+    for (let i = 1; i < this.segments.length; i++) {
+        const segment = this.segments[i];
+        if (i % 2 === 0) {
+            segment.drawSquare(pickRandomColor());
+        } else {
+            segment.drawSquare(pickRandomColor());
+        }
     }
 };
+
 
 Snake.prototype.move = function () {
     let head = this.segments[0];
@@ -222,12 +229,19 @@ $("body").keydown((event) => {
 // for (let i = 0; i < blocksArr.length; i++) {
 //     const element = blocksArr[i];
 
-//     const red = Math.floor(Math.random() * 256);
-//     const green = Math.floor(Math.random() * 256);
-//     const blue = Math.floor(Math.random() * 256);
+    const pickRandomColor = function () {
+        const red = Math.floor(Math.random() * 256);
+        const green = Math.floor(Math.random() * 256);
+        const blue = Math.floor(Math.random() * 256);
+
+        const randomColor = `rgb(${red}, ${green}, ${blue})`;
+        return randomColor;
+    };
+
     
-//     // Формуємо рядок у форматі RGB
-//     const randomColor = `rgb(${red}, ${green}, ${blue})`;
+    
+    // Формуємо рядок у форматі RGB
+    
 
 //     // element.drawSquare(randomColor);
 //     element.drawCircle(randomColor);
