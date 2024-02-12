@@ -145,11 +145,11 @@ Snake.prototype.checkCollision = function (head) {
 Snake.prototype.setDirection = function (newDirection) {
     if (this.direction === "up" && newDirection === "down") {
         return;
-    }else if (this.direction === "right" && this.newDirection === "left") {
+    }else if (this.direction === "right" && newDirection === "left") {
         return;
-    }else if (this.direction === "down" && this.newDirection === "up") {
+    }else if (this.direction === "down" && newDirection === "up") {
         return;
-    }else if (this.direction === "left" && this.newDirection === "right") {
+    }else if (this.direction === "left" && newDirection === "right") {
         return;
     }
 
