@@ -1,5 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const backgoundImg = document.getElementById("desert_img");
+
 
 let width = canvas.width;
 let height = canvas.height;
@@ -7,6 +9,7 @@ let height = canvas.height;
 let blockSize = 10;
 let widthInBlocks = width/blockSize;
 let heightInBlocks = height/blockSize;
+let animationTime = 100;
 
 let score = 0;
 
@@ -29,7 +32,8 @@ let drawScore = () => {
 
 // Функція котра завершує гру.
 const gameOver = () => {
-    clearInterval(intervalId);
+    // clearInterval(intervalId);
+    animationTime = false;
     ctx.font = "60px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
@@ -47,6 +51,15 @@ const circle = function (x, y, radius, fillCircle) {
     } else {
         ctx.stroke();
     }
+};
+
+const pickRandomColor = () => {
+    const red = Math.floor(Math.random() * 256);
+    const green = Math.floor(Math.random() * 256);
+    const blue = Math.floor(Math.random() * 256);
+
+    const randomColor = `rgb(${red}, ${green}, ${blue})`;
+    return randomColor;
 };
 
 // Конструктор блоку і його методи
@@ -125,6 +138,9 @@ Snake.prototype.move = function () {
     if (newHead.equal(apple.position)) {
         score++;
         apple.move();
+        if (animationTime > 0) {
+            animationTime -= 1;
+        }
     }else {
         this.segments.pop();
     }
@@ -184,14 +200,6 @@ let snake = new Snake();
 let apple = new Apple();
 
 
-let intervalId = setInterval(() => {
-    ctx.clearRect(0,0, width, height);
-    drawScore();
-    snake.move();
-    snake.draw();
-    apple.draw();
-    drawBorder();
-}, 100);
 
 const directions = {
     37: "left",
@@ -208,7 +216,23 @@ $("body").keydown((event) => {
     }
 });
 
+const gameLoop = function() {
+    if (animationTime === false) {
+        return;
+    }
+    
+    ctx.clearRect(0, 0, width, height);
+    drawScore();
+    ctx.drawImage(backgoundImg, 0, 0);
+    snake.move();
+    snake.draw();
+    apple.draw();
+    drawBorder();
 
+    setTimeout(gameLoop, animationTime);
+    
+};
+gameLoop();
 
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -229,14 +253,7 @@ $("body").keydown((event) => {
 // for (let i = 0; i < blocksArr.length; i++) {
 //     const element = blocksArr[i];
 
-    const pickRandomColor = function () {
-        const red = Math.floor(Math.random() * 256);
-        const green = Math.floor(Math.random() * 256);
-        const blue = Math.floor(Math.random() * 256);
 
-        const randomColor = `rgb(${red}, ${green}, ${blue})`;
-        return randomColor;
-    };
 
     
     
