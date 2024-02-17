@@ -1,6 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const backgoundImg = document.getElementById("desert_img");
+const appleImage = document.getElementById("apple");
+const restartBtn = document.getElementById("restart_btn");
+
 
 
 let width = canvas.width;
@@ -62,6 +65,16 @@ const pickRandomColor = () => {
     return randomColor;
 };
 
+function isPositionInsideSnake(col, row) {
+    for (let i = 0; i < snake.segments.length; i++) {
+        const segment = snake.segments[i];
+        if (col === segment.col && row === segment.row) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Конструктор блоку і його методи
 const Block = function (col, row) {
     this.col = col;
@@ -82,6 +95,7 @@ Block.prototype.drawCircle = function (color) {
     circle(centerX, centerY, blockSize/2, true);
 };
 
+// Перевіряє чи відповідають координати одного блоку іншому (чи співпадають координати).
 Block.prototype.equal = function (otherBlock) {
     return this.col === otherBlock.col && this.row === otherBlock.row;
 };
@@ -190,8 +204,11 @@ Apple.prototype.draw = function () {
 };
 
 Apple.prototype.move = function () {
-    let randomCol = Math.floor(Math.random()*(widthInBlocks - 2)) + 1;
-    let randomRow = Math.floor(Math.random()*(widthInBlocks - 2)) + 1;
+    let randomCol, randomRow;
+    do {
+        randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
+        randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
+    } while (isPositionInsideSnake(randomCol, randomRow));
     this.position = new Block(randomCol, randomRow);
 };
 
@@ -210,10 +227,13 @@ const directions = {
 
 $("body").keydown((event) => {
     let newDirection = directions[event.keyCode];
-    console.log(newDirection);
     if (newDirection !== undefined) {
         snake.setDirection(newDirection);
     }
+});
+
+$(restartBtn).click(() => {
+    location.reload();
 });
 
 const gameLoop = function() {
@@ -222,8 +242,9 @@ const gameLoop = function() {
     }
     
     ctx.clearRect(0, 0, width, height);
-    drawScore();
+    
     ctx.drawImage(backgoundImg, 0, 0);
+    drawScore();
     snake.move();
     snake.draw();
     apple.draw();
@@ -235,7 +256,6 @@ const gameLoop = function() {
 gameLoop();
 
 // --------------------------------------------------------------------------------------------------------------------
-
 
 
 
